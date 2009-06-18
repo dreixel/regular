@@ -1,10 +1,10 @@
 {-# LANGUAGE FlexibleContexts   #-}
-{-# LANGUAGE StandaloneDeriving #-}
+{-# LANGUAGE TypeOperators      #-}
 {-# LANGUAGE TypeFamilies       #-}
 
 -----------------------------------------------------------------------------
 -- |
--- Module      :  Generics.Regular.Rewriting.Representations
+-- Module      :  Generics.Regular.Base
 -- Copyright   :  (c) 2008 Universiteit Utrecht
 -- License     :  BSD3
 --
@@ -81,3 +81,26 @@ class Functor (PF a) => Regular a where
   type PF a :: * -> *
   from      :: a -> PF a a
   to        :: PF a a -> a
+
+-----------------------------------------------------------------------------
+-- Functorial map function.
+-----------------------------------------------------------------------------
+
+instance Functor Id where
+  fmap f (Id r) = Id (f r)
+
+instance Functor (K a) where
+  fmap _ (K a) = K a
+
+instance Functor Unit where
+  fmap _ Unit = Unit
+
+instance (Functor f, Functor g) => Functor (f :+: g) where
+  fmap f (L x) = L (fmap f x)
+  fmap f (R y) = R (fmap f y)
+
+instance (Functor f, Functor g) => Functor (f :*: g) where
+  fmap f (x :*: y) = fmap f x :*: fmap f y
+
+instance Functor f => Functor (Con f) where
+  fmap f (Con con r) = Con con (fmap f r)

@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------------
 -- |
--- Module      :  Generics.Regular.Rewriting.Representations
+-- Module      :  Generics.Regular
 -- Copyright   :  (c) 2008 Universiteit Utrecht
 -- License     :  BSD3
 --

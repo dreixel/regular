@@ -2,11 +2,9 @@
 {-# LANGUAGE TypeOperators    #-}
 {-# LANGUAGE TypeFamilies     #-}
 
-{-# OPTIONS_GHC -fno-warn-orphans #-}
-
 -----------------------------------------------------------------------------
 -- |
--- Module      :  Generics.Regular.Rewriting.Base
+-- Module      :  Generics.Regular.Functions
 -- Copyright   :  (c) 2008 Universiteit Utrecht
 -- License     :  BSD3
 --
@@ -14,7 +12,7 @@
 -- Stability   :  experimental
 -- Portability :  non-portable
 --
--- Summary: Generic functionality for regular dataypes: map, flatten, zip,
+-- Summary: Generic functionality for regular dataypes: mapM, flatten, zip,
 -- equality, show and value generation.
 -----------------------------------------------------------------------------
 
@@ -52,30 +50,6 @@ module Generics.Regular.Functions (
 import Control.Monad
 
 import Generics.Regular.Base
-
-
------------------------------------------------------------------------------
--- Functorial map function.
------------------------------------------------------------------------------
-
-instance Functor Id where
-  fmap f (Id r) = Id (f r)
-
-instance Functor (K a) where
-  fmap _ (K a) = K a
-
-instance Functor Unit where
-  fmap _ Unit = Unit
-
-instance (Functor f, Functor g) => Functor (f :+: g) where
-  fmap f (L x) = L (fmap f x)
-  fmap f (R y) = R (fmap f y)
-
-instance (Functor f, Functor g) => Functor (f :*: g) where
-  fmap f (x :*: y) = fmap f x :*: fmap f y
-
-instance Functor f => Functor (Con f) where
-  fmap f (Con con r) = Con con (fmap f r)
 
 
 -----------------------------------------------------------------------------
