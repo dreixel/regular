@@ -18,12 +18,12 @@
 module Generics.Regular.Base (
 
     -- * Functorial structural representation types.
-    K (..),
-    Id (..),
-    Unit (..),
-    (:+:) (..),
-    (:*:) (..),
-    Con (..),
+    K(..),
+    I(..),
+    U(..),
+    (:+:)(..),
+    (:*:)(..),
+    C(..),
 
     -- * Fixed-point type.
     Fix (..),
@@ -39,22 +39,22 @@ module Generics.Regular.Base (
 -----------------------------------------------------------------------------
 
 -- | Structure type for constant values.
-data K a r      = K a
+data K a r       = K a
 
 -- | Structure type for recursive values.
-data Id r       = Id r
+data I r         = I r
 
 -- | Structure type for empty constructors.
-data Unit r     = Unit
+data U r         = U
 
 -- | Structure type for alternatives in a type.
-data (f :+: g) r  = L (f r) | R (g r)
+data (f :+: g) r = L (f r) | R (g r)
 
 -- | Structure type for fields of a constructor.
 data (f :*: g) r = f r :*: g r
 
 -- | Structure type to store the name of a constructor.
-data Con f r    = Con String (f r)
+data C f r       = C String (f r)
 
 infixr 6 :+:
 infixr 7 :*:
@@ -86,14 +86,14 @@ class Functor (PF a) => Regular a where
 -- Functorial map function.
 -----------------------------------------------------------------------------
 
-instance Functor Id where
-  fmap f (Id r) = Id (f r)
+instance Functor I where
+  fmap f (I r) = I (f r)
 
 instance Functor (K a) where
   fmap _ (K a) = K a
 
-instance Functor Unit where
-  fmap _ Unit = Unit
+instance Functor U where
+  fmap _ U = U
 
 instance (Functor f, Functor g) => Functor (f :+: g) where
   fmap f (L x) = L (fmap f x)
@@ -102,5 +102,6 @@ instance (Functor f, Functor g) => Functor (f :+: g) where
 instance (Functor f, Functor g) => Functor (f :*: g) where
   fmap f (x :*: y) = fmap f x :*: fmap f y
 
-instance Functor f => Functor (Con f) where
-  fmap f (Con con r) = Con con (fmap f r)
+instance Functor f => Functor (C f) where
+  fmap f (C con r) = C con (fmap f r)
+

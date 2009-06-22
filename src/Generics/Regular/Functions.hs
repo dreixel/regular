@@ -60,14 +60,14 @@ import Generics.Regular.Base
 class GMap f where
   fmapM :: Monad m => (a -> m b) -> f a -> m (f b)
 
-instance GMap Id where
-  fmapM f (Id r) = liftM Id (f r)
+instance GMap I where
+  fmapM f (I r) = liftM I (f r)
 
 instance GMap (K a) where
   fmapM _ (K x)  = return (K x)
 
-instance GMap Unit where
-  fmapM _ Unit = return Unit
+instance GMap U where
+  fmapM _ U = return U
 
 instance (GMap f, GMap g) => GMap (f :+: g) where
   fmapM f (L x) = liftM L (fmapM f x)
@@ -76,8 +76,8 @@ instance (GMap f, GMap g) => GMap (f :+: g) where
 instance (GMap f, GMap g) => GMap (f :*: g) where
   fmapM f (x :*: y) = liftM2 (:*:) (fmapM f x) (fmapM f y)
 
-instance GMap f => GMap (Con f) where
-  fmapM f (Con c x) = liftM (Con c) (fmapM f x)
+instance GMap f => GMap (C f) where
+  fmapM f (C c x) = liftM (C c) (fmapM f x)
 
 
 -----------------------------------------------------------------------------
@@ -89,13 +89,13 @@ instance GMap f => GMap (Con f) where
 class Crush f where
   crush :: (a -> b -> b) -> b -> f a -> b
 
-instance Crush Id where
-  crush op e (Id x) = x `op` e
+instance Crush I where
+  crush op e (I x) = x `op` e
 
 instance Crush (K a) where
   crush _ e _ = e
 
-instance Crush Unit where
+instance Crush U where
   crush _ e _ = e
 
 instance (Crush f, Crush g) => Crush (f :+: g) where
@@ -105,8 +105,8 @@ instance (Crush f, Crush g) => Crush (f :+: g) where
 instance (Crush f, Crush g) => Crush (f :*: g) where
   crush op e (x :*: y) = crush op (crush op e y) x
 
-instance Crush f => Crush (Con f) where
-  crush op e (Con _c x) = crush op e x
+instance Crush f => Crush (C f) where
+  crush op e (C _c x) = crush op e x
 
 -- | Flatten a structure by collecting all the elements present.
 flatten :: Crush f => f a -> [a]
@@ -121,16 +121,16 @@ flatten = crush (:) []
 class Zip f where
   fzipM :: Monad m => (a -> b -> m c) -> f a -> f b -> m (f c)
 
-instance Zip Id where
-  fzipM f (Id x) (Id y) = liftM Id (f x y)
+instance Zip I where
+  fzipM f (I x) (I y) = liftM I (f x y)
 
 instance Eq a => Zip (K a) where
   fzipM _ (K x) (K y) 
     | x == y    = return (K x)
     | otherwise = fail "fzipM: structure mismatch"
 
-instance Zip Unit where
-  fzipM _ Unit Unit = return Unit
+instance Zip U where
+  fzipM _ U U = return U
 
 instance (Zip f, Zip g) => Zip (f :+: g) where
   fzipM f (L x) (L y) = liftM L (fzipM f x y)
@@ -142,8 +142,8 @@ instance (Zip f, Zip g) => Zip (f :*: g) where
     liftM2 (:*:) (fzipM f x1 x2)
                  (fzipM f y1 y2)
 
-instance Zip f => Zip (Con f) where
-  fzipM f (Con c1 x) (Con _c2 y) = liftM (Con c1) (fzipM f x y)
+instance Zip f => Zip (C f) where
+  fzipM f (C c1 x) (C _c2 y) = liftM (C c1) (fzipM f x y)
 
 -- | Functorial zip with a non-monadic function, resulting in a monadic value.
 fzip  :: (Zip f, Monad m) => (a -> b -> c) -> f a -> f b -> m (f c)
@@ -171,14 +171,14 @@ geq x y = maybe False (crush (&&) True) (fzip geq (from x) (from y))
 class GShow f where
   gshow :: (a -> ShowS) -> f a -> ShowS
 
-instance GShow Id where
-  gshow f (Id r) = f r
+instance GShow I where
+  gshow f (I r) = f r
 
 instance Show a => GShow (K a) where
   gshow _ (K x) = shows x
 
-instance GShow Unit where
-  gshow _ Unit = id
+instance GShow U where
+  gshow _ U = id
 
 instance (GShow f, GShow g) => GShow (f :+: g) where
   gshow f (L x) = gshow f x
@@ -187,8 +187,8 @@ instance (GShow f, GShow g) => GShow (f :+: g) where
 instance (GShow f, GShow g) => GShow (f :*: g) where
   gshow f (x :*: y) = gshow f x . showChar ' ' . gshow f y
 
-instance GShow f => GShow (Con f) where
-  gshow f (Con c x) = showParen True (showString c . showChar ' ' . gshow f x)
+instance GShow f => GShow (C f) where
+  gshow f (C c x) = showParen True (showString c . showChar ' ' . gshow f x)
 
 
 -----------------------------------------------------------------------------
@@ -219,29 +219,29 @@ class LR f where
   leftf  :: a -> f a
   rightf :: a -> f a
 
-instance LR Id where
-  leftf  x = Id x
-  rightf x = Id x
+instance LR I where
+  leftf  x = I x
+  rightf x = I x
 
 instance LRBase a => LR (K a) where
   leftf  _ = K leftb
   rightf _ = K rightb
 
-instance LR Unit where
-  leftf  _ = Unit
-  rightf _ = Unit
+instance LR U where
+  leftf  _ = U
+  rightf _ = U
 
-instance (LR f, LR g) => LR (f :+: g)  where
+instance (LR f, LR g) => LR (f :+: g) where
   leftf  x = L (leftf x)
   rightf x = R (rightf x)
 
-instance (LR f, LR g) => LR (f :*: g)  where
+instance (LR f, LR g) => LR (f :*: g) where
   leftf  x = leftf x :*: leftf x
   rightf x = rightf x :*: rightf x
 
-instance LR f => LR (Con f) where
-  leftf  x = Con (error "Should never be inspected") (leftf x)
-  rightf x = Con (error "Should never be inspected") (rightf x)
+instance LR f => LR (C f) where
+  leftf  x = C (error "Should never be inspected") (leftf x)
+  rightf x = C (error "Should never be inspected") (rightf x)
 
 -- | Produces a value which should be different from the value returned by 
 -- @right@.
