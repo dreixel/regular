@@ -76,8 +76,8 @@ instance (GMap f, GMap g) => GMap (f :+: g) where
 instance (GMap f, GMap g) => GMap (f :*: g) where
   fmapM f (x :*: y) = liftM2 (:*:) (fmapM f x) (fmapM f y)
 
-instance GMap f => GMap (C f) where
-  fmapM f (C c x) = liftM (C c) (fmapM f x)
+instance GMap f => GMap (C c f) where
+  fmapM f (C x) = liftM C (fmapM f x)
 
 
 -----------------------------------------------------------------------------
@@ -105,8 +105,8 @@ instance (Crush f, Crush g) => Crush (f :+: g) where
 instance (Crush f, Crush g) => Crush (f :*: g) where
   crush op e (x :*: y) = crush op (crush op e y) x
 
-instance Crush f => Crush (C f) where
-  crush op e (C _c x) = crush op e x
+instance Crush f => Crush (C c f) where
+  crush op e (C x) = crush op e x
 
 -- | Flatten a structure by collecting all the elements present.
 flatten :: Crush f => f a -> [a]
@@ -142,8 +142,8 @@ instance (Zip f, Zip g) => Zip (f :*: g) where
     liftM2 (:*:) (fzipM f x1 x2)
                  (fzipM f y1 y2)
 
-instance Zip f => Zip (C f) where
-  fzipM f (C c1 x) (C _c2 y) = liftM (C c1) (fzipM f x y)
+instance Zip f => Zip (C c f) where
+  fzipM f (C x) (C y) = liftM C (fzipM f x y)
 
 -- | Functorial zip with a non-monadic function, resulting in a monadic value.
 fzip  :: (Zip f, Monad m) => (a -> b -> c) -> f a -> f b -> m (f c)
@@ -187,8 +187,9 @@ instance (GShow f, GShow g) => GShow (f :+: g) where
 instance (GShow f, GShow g) => GShow (f :*: g) where
   gshow f (x :*: y) = gshow f x . showChar ' ' . gshow f y
 
-instance GShow f => GShow (C f) where
-  gshow f (C c x) = showParen True (showString c . showChar ' ' . gshow f x)
+instance (Constructor c, GShow f) => GShow (C c f) where
+  gshow f cx@(C x) = 
+    showParen True (showString (conName cx) . showChar ' ' . gshow f x)
 
 
 -----------------------------------------------------------------------------
@@ -239,9 +240,9 @@ instance (LR f, LR g) => LR (f :*: g) where
   leftf  x = leftf x :*: leftf x
   rightf x = rightf x :*: rightf x
 
-instance LR f => LR (C f) where
-  leftf  x = C (error "Should never be inspected") (leftf x)
-  rightf x = C (error "Should never be inspected") (rightf x)
+instance LR f => LR (C c f) where
+  leftf  x = C (leftf x)
+  rightf x = C (rightf x)
 
 -- | Produces a value which should be different from the value returned by 
 -- @right@.
