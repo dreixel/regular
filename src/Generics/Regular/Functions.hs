@@ -1,6 +1,7 @@
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE TypeOperators    #-}
-{-# LANGUAGE TypeFamilies     #-}
+{-# LANGUAGE FlexibleContexts  #-}
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE TypeOperators     #-}
+{-# LANGUAGE TypeFamilies      #-}
 
 -----------------------------------------------------------------------------
 -- |
@@ -43,7 +44,10 @@ module Generics.Regular.Functions (
   LRBase (..),
   LR (..),
   left,
-  right  
+  right,
+  
+  -- * Fold and algebras
+  Algebra, Alg, Fold, fold, (&)
 
 ) where
 
@@ -206,6 +210,10 @@ instance LRBase Int where
   leftb  = 0
   rightb = 1
 
+instance LRBase Integer where
+  leftb  = 0
+  rightb = 1
+
 instance LRBase Char where
   leftb  = 'L'
   rightb = 'R'
@@ -253,3 +261,84 @@ left = to (leftf left)
 -- @left@.
 right :: (Regular a, LR (PF a)) => a
 right = to (rightf right)
+
+
+-----------------------------------------------------------------------------
+-- Folds
+-----------------------------------------------------------------------------
+
+type family Alg (f :: (* -> *)) 
+                (r :: *) -- result type
+                :: *
+
+-- | For a constant, we take the constant value to a result.
+type instance Alg (K a) r = a -> r
+
+-- | For a unit, no arguments are available.
+type instance Alg U r = r
+
+-- | For an identity, we turn the recursive result into a final result.
+type instance Alg I r = r -> r
+
+-- | For a sum, the algebra is a pair of two algebras.
+type instance Alg (f :+: g) r = (Alg f r, Alg g r)
+
+-- | For a product where the left hand side is a constant, we
+--   take the value as an additional argument.
+type instance Alg (K a :*: g) r = a -> Alg g r
+
+-- | For a product where the left hand side is an identity, we
+--   take the recursive result as an additional argument.
+type instance Alg (I :*: g) r = r -> Alg g r
+
+-- | Constructors are ignored.
+type instance Alg (C c f) r = Alg f r
+
+
+type Algebra a r = Alg (PF a) r
+
+-- * The class to turn convenient algebras into standard algebras.
+
+-- | The class fold explains how to convert a convenient algebra
+--   'Alg' back into a function from functor to result, as required
+--   by the standard fold function.
+class Fold (f :: * -> *) where
+  alg :: Alg f r -> f r -> r
+
+instance Fold (K a) where
+  alg f (K x) = f x
+
+instance Fold U where
+  alg f U     = f
+
+instance Fold I where
+  alg f (I x) = f x
+
+instance (Fold f, Fold g) => Fold (f :+: g) where
+  alg (f, _) (L x) = alg f x
+  alg (_, g) (R x) = alg g x
+
+instance (Fold g) => Fold (K a :*: g) where
+  alg f (K x :*: y) = alg (f x) y
+
+instance (Fold g) => Fold (I :*: g) where
+  alg f (I x :*: y) = alg (f x) y
+
+instance (Fold f) => Fold (C c f) where
+  alg f (C x) = alg f x
+
+-- * Interface
+
+-- | Fold with convenient algebras.
+fold :: (Regular a, Fold (PF a), Functor (PF a))
+     => Algebra a r -> a -> r
+fold f = alg f . fmap (\x -> fold f x) . from
+
+-- * Construction of algebras
+
+infixr 5 &
+
+-- | For constructing algebras that are made of nested pairs rather
+--   than n-ary tuples, it is helpful to use this pairing combinator.
+(&) :: a -> b -> (a, b)
+(&) = (,)
