@@ -39,6 +39,7 @@ module Generics.Regular.Functions (
 
   -- * Show function.
   GShow (..),
+  gshow,
   
   -- * Functions for generating values that are different on top-level.
   LRBase (..),
@@ -46,8 +47,11 @@ module Generics.Regular.Functions (
   left,
   right,
   
-  -- * Fold and algebras
-  Algebra, Alg, Fold, fold, (&)
+  -- * Functions for generating values that are different on top-level.
+  Alg, Algebra,
+  Fold, alg,
+  fold,
+  (&)  
 
 ) where
 
@@ -173,28 +177,32 @@ geq x y = maybe False (crush (&&) True) (fzip geq (from x) (from y))
 
 -- | The @GShow@ class defines a show on values.
 class GShow f where
-  gshow :: (a -> ShowS) -> f a -> ShowS
+  gshowf :: (a -> ShowS) -> f a -> ShowS
 
 instance GShow I where
-  gshow f (I r) = f r
+  gshowf f (I r) = f r
 
 instance Show a => GShow (K a) where
-  gshow _ (K x) = shows x
+  gshowf _ (K x) = shows x
 
 instance GShow U where
-  gshow _ U = id
+  gshowf _ U = id
 
 instance (GShow f, GShow g) => GShow (f :+: g) where
-  gshow f (L x) = gshow f x
-  gshow f (R x) = gshow f x
+  gshowf f (L x) = gshowf f x
+  gshowf f (R x) = gshowf f x
 
 instance (GShow f, GShow g) => GShow (f :*: g) where
-  gshow f (x :*: y) = gshow f x . showChar ' ' . gshow f y
+  gshowf f (x :*: y) = gshowf f x . showChar ' ' . gshowf f y
+
 
 instance (Constructor c, GShow f) => GShow (C c f) where
-  gshow f cx@(C x) = 
-    showParen True (showString (conName cx) . showChar ' ' . gshow f x)
+  gshowf f cx@(C x) = 
+    showParen True (showString (conName cx) . showChar ' ' . gshowf f x)
 
+
+gshow :: (Regular a, GShow (PF a)) => a -> ShowS
+gshow x = gshowf gshow (from x)
 
 -----------------------------------------------------------------------------
 -- Functions for generating values that are different on top-level.

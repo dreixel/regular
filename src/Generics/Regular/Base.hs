@@ -42,10 +42,10 @@ import Generics.Regular.Constructor
 -----------------------------------------------------------------------------
 
 -- | Structure type for constant values.
-data K a r       = K a
+data K a r       = K { unK :: a }
 
 -- | Structure type for recursive values.
-data I r         = I r
+data I r         = I { unI :: r }
 
 -- | Structure type for empty constructors.
 data U r         = U
@@ -108,4 +108,3 @@ instance (Functor f, Functor g) => Functor (f :*: g) where
 
 instance Functor f => Functor (C c f) where
   fmap f (C r) = C (fmap f r)
-
