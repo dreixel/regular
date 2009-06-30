@@ -17,7 +17,7 @@
 
 module Generics.Regular.Base (
 
-    -- * Functorial structural representation types.
+    -- * Functorial structural representation types
     K(..),
     I(..),
     U(..),
@@ -26,10 +26,10 @@ module Generics.Regular.Base (
     C(..),
     Constructor(..), Fixity(..), Associativity(..),
 
-    -- * Fixed-point type.
+    -- * Fixed-point type
     Fix (..),
 
-    -- * Type class capturing the structural representation of a type and the corresponding embedding-projection pairs.
+    -- * Type class capturing the structural representation of a type and the corresponding embedding-projection pairs
     Regular (..), PF
     
   ) where

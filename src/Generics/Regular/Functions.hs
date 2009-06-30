@@ -14,40 +14,40 @@
 -- Portability :  non-portable
 --
 -- Summary: Generic functionality for regular dataypes: mapM, flatten, zip,
--- equality, show and value generation.
+-- equality, show, value generation and fold.
 -----------------------------------------------------------------------------
 
 module Generics.Regular.Functions (
 
-  -- * Functorial map function.
+  -- * Functorial map function
   Functor (..),
   
-  -- * Monadic functorial map function.
+  -- * Monadic functorial map function
   GMap (..),
   
-  -- * Crush functions.
-  Crush (..),
+  -- * Crush right functions
+  CrushR (..),
   flatten,
 
-  -- * Zip functions.
+  -- * Zip functions
   Zip (..),
   fzip,
   fzip',
 
-  -- * Equality function.
+  -- * Equality function
   geq,
 
-  -- * Show function.
+  -- * Show function
   GShow (..),
   gshow,
   
-  -- * Functions for generating values that are different on top-level.
+  -- * Functions for generating values that are different on top-level
   LRBase (..),
   LR (..),
   left,
   right,
   
-  -- * Functions for generating values that are different on top-level.
+  -- * Generic folding
   Alg, Algebra,
   Fold, alg,
   fold,
@@ -89,36 +89,35 @@ instance GMap f => GMap (C c f) where
 
 
 -----------------------------------------------------------------------------
--- Crush functions.
+-- CrushR functions.
 -----------------------------------------------------------------------------
 
--- | The @Crush@ class defines a crush on functorial values. In fact,
--- @crush@ is a generalized @foldr@.
-class Crush f where
-  crush :: (a -> b -> b) -> b -> f a -> b
+-- | The @CrushR@ class defines a right-associative crush on functorial values.
+class CrushR f where
+  crushr :: (a -> b -> b) -> b -> f a -> b
 
-instance Crush I where
-  crush op e (I x) = x `op` e
+instance CrushR I where
+  crushr op e (I x) = x `op` e
 
-instance Crush (K a) where
-  crush _ e _ = e
+instance CrushR (K a) where
+  crushr _ e _ = e
 
-instance Crush U where
-  crush _ e _ = e
+instance CrushR U where
+  crushr _ e _ = e
 
-instance (Crush f, Crush g) => Crush (f :+: g) where
-  crush op e (L x) = crush op e x
-  crush op e (R y) = crush op e y
+instance (CrushR f, CrushR g) => CrushR (f :+: g) where
+  crushr op e (L x) = crushr op e x
+  crushr op e (R y) = crushr op e y
 
-instance (Crush f, Crush g) => Crush (f :*: g) where
-  crush op e (x :*: y) = crush op (crush op e y) x
+instance (CrushR f, CrushR g) => CrushR (f :*: g) where
+  crushr op e (x :*: y) = crushr op (crushr op e y) x
 
-instance Crush f => Crush (C c f) where
-  crush op e (C x) = crush op e x
+instance CrushR f => CrushR (C c f) where
+  crushr op e (C x) = crushr op e x
 
 -- | Flatten a structure by collecting all the elements present.
-flatten :: Crush f => f a -> [a]
-flatten = crush (:) []
+flatten :: CrushR f => f a -> [a]
+flatten = crushr (:) []
 
 
 -----------------------------------------------------------------------------
@@ -167,8 +166,8 @@ fzip' f x y = maybe (error "fzip': structure mismatch") id (fzip f x y)
 -----------------------------------------------------------------------------
 
 -- | Equality on values based on their structural representation.
-geq :: (b ~ PF a, Regular a, Crush b, Zip b) => a -> a -> Bool
-geq x y = maybe False (crush (&&) True) (fzip geq (from x) (from y))
+geq :: (b ~ PF a, Regular a, CrushR b, Zip b) => a -> a -> Bool
+geq x y = maybe False (crushr (&&) True) (fzip geq (from x) (from y))
 
 
 -----------------------------------------------------------------------------
@@ -305,11 +304,8 @@ type instance Alg (C c f) r = Alg f r
 
 type Algebra a r = Alg (PF a) r
 
--- * The class to turn convenient algebras into standard algebras.
-
--- | The class fold explains how to convert a convenient algebra
---   'Alg' back into a function from functor to result, as required
---   by the standard fold function.
+-- | The class fold explains how to convert an algebra
+--   'Alg' into a function from functor to result.
 class Fold (f :: * -> *) where
   alg :: Alg f r -> f r -> r
 
@@ -335,18 +331,14 @@ instance (Fold g) => Fold (I :*: g) where
 instance (Fold f) => Fold (C c f) where
   alg f (C x) = alg f x
 
--- * Interface
-
 -- | Fold with convenient algebras.
 fold :: (Regular a, Fold (PF a), Functor (PF a))
      => Algebra a r -> a -> r
 fold f = alg f . fmap (\x -> fold f x) . from
 
--- * Construction of algebras
-
+-- Construction of algebras
 infixr 5 &
 
--- | For constructing algebras that are made of nested pairs rather
---   than n-ary tuples, it is helpful to use this pairing combinator.
+-- | For constructing algebras it is helpful to use this pairing combinator.
 (&) :: a -> b -> (a, b)
 (&) = (,)

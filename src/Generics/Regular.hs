@@ -13,30 +13,31 @@
 -- functionality. The user is only required to provide an instance of
 -- @Regular@ for the datatype.
 --
--- Consider a datatype representing logical propositions:
+-- Consider a datatype representing logical expressions:
 --
--- @
---   data Expr = Const Int | Expr :++: Expr | Expr :**: Expr deriving Show
--- @
+-- >  data Logic = Var String
+-- >             | Logic :->:  Logic  -- implication
+-- >             | Logic :<->: Logic  -- equivalence
+-- >             | Logic :&&:  Logic  -- and (conjunction)
+-- >             | Logic :||:  Logic  -- or (disjunction)
+-- >             | Not Logic          -- not
+-- >             | T                  -- true
+-- >             | F                  -- false
 --
--- An instance of @Regular@ would look like:
+-- An instance of @Regular@ is derived with TH by invoking:
 --
--- @
---   instance Regular Expr where
---     type PF Expr = Con (K Int) :+: Con (Id :*: Id) :+: Con (Id :*: Id)
---     from (Const n)    = L (Con \"Const\" (K n))
---     from (e1 :++: e2) = R (L (Con \"(:++:)\" $ (Id e1) :*: (Id e2)))
---     from (e1 :**: e2) = R (R (Con \"(:**:)\" $ (Id e1) :*: (Id e2)))
---     to (L (Con _ (K n)))                        = Const n
---     to (R (L (Con _ ((Id r1) :*: (Id r2))))) = r1 :++: r2
---     to (R (R (Con _ ((Id r1) :*: (Id r2))))) = r1 :**: r2
--- @
+-- >  $(deriveConstructors ''Logic)
+-- >  $(deriveRegular ''Logic "PFLogic")
+-- >  type instance PF Logic = PFLogic
+-- 
 -----------------------------------------------------------------------------
 
 module Generics.Regular (
     module Generics.Regular.Base,
-    module Generics.Regular.Functions
+    module Generics.Regular.Functions,
+    module Generics.Regular.TH
   ) where
 
 import Generics.Regular.Base
 import Generics.Regular.Functions
+import Generics.Regular.TH

@@ -17,7 +17,7 @@
 --
 -----------------------------------------------------------------------------
 
-
+-- Adapted from Generics.Multirec.TH
 module Generics.Regular.TH
   ( deriveConstructors,
     deriveRegular,
