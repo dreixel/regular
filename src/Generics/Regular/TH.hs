@@ -111,7 +111,7 @@ mkInstance (InfixC t1 n t2) =
                  DataConI _ _ _ f -> convertFixity f
                  _ -> Prefix
       instanceD (cxt []) (appT (conT ''Constructor) (conT $ mkName (nameBase n)))
-        [funD 'conName   [clause [wildP] (normalB (stringE (nameBase n))) []],
+        [funD 'conName   [clause [wildP] (normalB (stringE ("(" ++ (nameBase n) ++ ")"))) []],
          funD 'conFixity [clause [wildP] (normalB [| fi |]) []]]
   where
     convertFixity (Fixity n d) = Infix (convertDirection d) n
