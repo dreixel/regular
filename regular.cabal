@@ -18,7 +18,7 @@ description:
   More information about this library can be found at
   <http://www.cs.uu.nl/wiki/GenericProgramming/Rewriting>.
   .
-  [1] http://hackage.haskell.org/cgi-bin/hackage-scripts/package/multirec
+  \[1] <http://hackage.haskell.org/cgi-bin/hackage-scripts/package/multirec>
 
 category:               Generics
 copyright:              (c) 2009 Universiteit Utrecht

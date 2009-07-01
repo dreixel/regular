@@ -74,13 +74,16 @@ newtype Fix f = In (f (Fix f))
 -- Type class capturing the structural representation of a type and the
 -- corresponding embedding-projection pairs.
 -----------------------------------------------------------------------------
-
+-- | The type family @PF@ represents the pattern functor of a datatype.
+-- 
+-- To be able to use the generic functions, the user is required to provide
+-- an instance of this type family.
 type family PF a :: * -> *
 
 -- | The type class @Regular@ captures the structural representation of a 
 -- type and the corresponding embedding-projection pairs.
 --
--- To be able to use the rewriting functions, the user is required to provide
+-- To be able to use the generic functions, the user is required to provide
 -- an instance of this type class.
 class Regular a where
   from      :: a -> PF a a
