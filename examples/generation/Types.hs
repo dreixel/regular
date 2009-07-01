@@ -44,7 +44,6 @@ data Direction a =
   | SouthWest
   | West
   | NorthWest
---  | Test (Direction a)
   deriving (Eq, Show, Ord)
 
 type instance PF (Direction a) =
@@ -58,7 +57,6 @@ instance Regular (Direction a) where
   to (R (R (R (R (R (L U))))))     = SouthWest
   to (R (R (R (R (R (R (L U))))))) = West
   to (R (R (R (R (R (R (R U))))))) = NorthWest
---  to (In (R (R (R (R (R (R (R (R (I a)))))))))) = Test (to a)
 
   from North     = L U
   from NorthEast = R (L U)
@@ -68,7 +66,6 @@ instance Regular (Direction a) where
   from SouthWest = R (R (R (R (R (L U)))))
   from West      = R (R (R (R (R (R (L U))))))
   from NorthWest = R (R (R (R (R (R (R U))))))
---  from (Test a)  = In (R (R (R (R (R (R (R (R (I (from a))))))))))
 
 -- Regular instance for the recursive identity.
 
