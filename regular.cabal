@@ -34,7 +34,7 @@ stability:              experimental
 build-type:             Custom
 cabal-version:          >= 1.2.1
 tested-with:            GHC == 6.10.1
-extra-source-files:   examples/Test.hs
+extra-source-files:     examples/Test.hs
 
 
 library
