@@ -33,7 +33,7 @@ module Generics.Regular.Base (
     Regular (..), PF
     
   ) where
-  
+
 import Generics.Regular.Constructor
 
 
