@@ -1,0 +1,46 @@
+regular: Generic programming with a fixed point view for regular datatypes
+=================================================================
+
+Write description here.
+
+Features
+--------
+
+* A simple library with a fixed point view
+
+* Includes detailed examples, such as the generic fold
+
+* Forms the basis for a generic rewriting library:
+ http://hackage.haskell.org/cgi-bin/hackage-scripts/package/rewriting
+
+* In its current form, this library does not support nested datatypes. There is
+ also limited support to access the parameters of a datatype.
+
+Requirements
+------------
+
+* GHC 6.10.1 or later
+
+Download
+--------
+
+With cabal-install:
+
+ cabal install regular
+
+Get the package:
+
+ http://hackage.haskell.org/cgi-bin/hackage-scripts/package/regular
+
+Get the source:
+
+ svn checkout https://subversion.cs.uu.nl/repos/project.dgp-haskell.libraries/regular/
+
+Bugs & Support
+--------------
+
+Report issues, request features, or just discuss the library with the
+authors, maintainers, and other interested persons at:
+
+  http://www.haskell.org/mailman/listinfo/generics
+
