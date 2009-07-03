@@ -1,7 +1,22 @@
-regular: Generic programming with a fixed point view for regular datatypes
-=================================================================
+regular: Generic programming with fixed points for regular datatypes
+====================================================================
 
-Write description here.
+Many generic programs require information about the recursive positions
+of a datatype. Examples include the generic fold, generic rewriting, and
+the Zipper data structure. This approach provides a fixed point view on
+data which allows these definitions for regular datatypes. It can be seen
+as a simplification of the Multirec library, which provides similar 
+functionality but for families of (possibly mutually recursive) datatypes.
+
+This library is the underlying generic representation mechanism in the paper:
+  Thomas van Noort, Alexey Rodriguez, Stefan Holdermans, Johan Jeuring, 
+  Bastiaan Heeren. A Lightweight Approach to Datatype-Generic Rewriting. 
+  In Ralf Hinze and Don Syme, editors, Proceedings of the ACM SIGPLAN Workshop 
+  on Generic Programming, WGP 2008, Victoria, BC, Canada, September 20, 2008, 
+  pages 13–24. ACM Press, 2008.
+
+More information is available on the webpage: 
+http://www.cs.uu.nl/wiki/bin/view/GenericProgramming/Regular
 
 Features
 --------
@@ -11,30 +26,31 @@ Features
 * Includes detailed examples, such as the generic fold
 
 * Forms the basis for a generic rewriting library:
- http://hackage.haskell.org/cgi-bin/hackage-scripts/package/rewriting
+  http://hackage.haskell.org/cgi-bin/hackage-scripts/package/rewriting
 
-* In its current form, this library does not support nested datatypes. There is
- also limited support to access the parameters of a datatype.
+* In its current form, this library does not support nested datatypes. Support 
+  to access parameters of a datatype is limited.
 
 Requirements
 ------------
 
 * GHC 6.10.1 or later
+* Cabal 1.2.1 or later
 
 Download
 --------
 
 With cabal-install:
 
- cabal install regular
+  cabal install regular
 
 Get the package:
 
- http://hackage.haskell.org/cgi-bin/hackage-scripts/package/regular
+  http://hackage.haskell.org/cgi-bin/hackage-scripts/package/regular
 
 Get the source:
 
- svn checkout https://subversion.cs.uu.nl/repos/project.dgp-haskell.libraries/regular/
+  svn checkout https://subversion.cs.uu.nl/repos/project.dgp-haskell.libraries/regular/
 
 Bugs & Support
 --------------
