@@ -42,6 +42,7 @@ library
   exposed-modules:      Generics.Regular
                         Generics.Regular.Base
                         Generics.Regular.Functions
+                        Generics.Regular.Read
                         Generics.Regular.Constructor
                         Generics.Regular.TH
   build-depends:        base >= 4.0 && < 5, template-haskell >= 2.2 && < 2.4

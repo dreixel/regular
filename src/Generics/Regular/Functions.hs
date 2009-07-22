@@ -41,6 +41,9 @@ module Generics.Regular.Functions (
   GShow (..),
   gshow,
   
+  -- * Read functions
+  module Generics.Regular.Read,
+  
   -- * Functions for generating values that are different on top-level
   LRBase (..),
   LR (..),
@@ -58,6 +61,7 @@ module Generics.Regular.Functions (
 import Control.Monad
 
 import Generics.Regular.Base
+import Generics.Regular.Read
 
 
 -----------------------------------------------------------------------------
