@@ -1,5 +1,5 @@
 name:                   regular
-version:                0.1
+version:                0.2
 synopsis:               Generic programming library for regular datatypes.
 description:
 
@@ -18,7 +18,7 @@ description:
   More information about this library can be found at
   <http://www.cs.uu.nl/wiki/GenericProgramming/Regular>.
   .
-  \[1] <http://hackage.haskell.org/cgi-bin/hackage-scripts/package/multirec>
+  \[1] <http://hackage.haskell.org/package/multirec>
 
 category:               Generics
 copyright:              (c) 2009 Universiteit Utrecht
@@ -35,15 +35,27 @@ build-type:             Custom
 cabal-version:          >= 1.2.1
 tested-with:            GHC == 6.10.1
 extra-source-files:     examples/Test.hs
+                        
+                        ChangeLog
 
 
 library
   hs-source-dirs:       src
   exposed-modules:      Generics.Regular
                         Generics.Regular.Base
-                        Generics.Regular.Functions
-                        Generics.Regular.Read
                         Generics.Regular.Constructor
+                        Generics.Regular.Selector
                         Generics.Regular.TH
+                        
+                        Generics.Regular.Functions
+                        Generics.Regular.Functions.Crush
+                        Generics.Regular.Functions.Eq
+                        Generics.Regular.Functions.Fold
+                        Generics.Regular.Functions.GMap
+                        Generics.Regular.Functions.LR
+                        Generics.Regular.Functions.Read
+                        Generics.Regular.Functions.Show
+                        Generics.Regular.Functions.Zip
+                        
   build-depends:        base >= 4.0 && < 5, template-haskell >= 2.2 && < 2.4
   ghc-options:          -Wall

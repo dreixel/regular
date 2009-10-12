@@ -34,10 +34,8 @@
 
 module Generics.Regular (
     module Generics.Regular.Base,
-    module Generics.Regular.Functions,
     module Generics.Regular.TH
   ) where
 
 import Generics.Regular.Base
-import Generics.Regular.Functions
 import Generics.Regular.TH

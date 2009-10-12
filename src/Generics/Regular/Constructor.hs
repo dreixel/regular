@@ -26,6 +26,8 @@ class Constructor c where
   conName   :: t c (f :: * -> *) r -> String
   conFixity :: t c (f :: * -> *) r -> Fixity
   conFixity = const Prefix
+  conIsRecord :: t c (f :: * -> *) r -> Bool
+  conIsRecord = const False
 
 -- | Datatype to represent the fixity of a constructor. An infix declaration
 -- directly corresponds to an application of 'Infix'.

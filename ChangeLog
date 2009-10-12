@@ -1,0 +1,8 @@
+version 0.2:
+  - Separated generic functions per modules
+  - Added generic unfold (thanks to Sebastiaan Visser)
+  - Added record selectors (thanks to Sebastiaan Visser)
+  - Improved generic show (thanks to Sebastiaan Visser)
+  - Added generic read (thanks to Rui Barbosa)
+
+version 0.1: initial release

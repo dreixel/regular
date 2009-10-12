@@ -24,7 +24,10 @@ module Generics.Regular.Base (
     (:+:)(..),
     (:*:)(..),
     C(..),
+    S(..),
+
     Constructor(..), Fixity(..), Associativity(..),
+    Selector(..), 
 
     -- * Fixed-point type
     Fix (..),
@@ -35,6 +38,7 @@ module Generics.Regular.Base (
   ) where
 
 import Generics.Regular.Constructor
+import Generics.Regular.Selector
 
 
 -----------------------------------------------------------------------------
@@ -59,6 +63,9 @@ data (f :*: g) r = f r :*: g r
 -- | Structure type to store the name of a constructor.
 data C c f r =  C { unC :: f r }
 
+-- | Structure type to store the name of a record selector.
+data S l f r =  S { unS :: f r }
+
 infixr 6 :+:
 infixr 7 :*:
 
@@ -67,7 +74,7 @@ infixr 7 :*:
 -----------------------------------------------------------------------------
 
 -- | The well-known fixed-point type.
-newtype Fix f = In (f (Fix f))
+newtype Fix f = In { out :: f (Fix f) }
 
 
 -----------------------------------------------------------------------------
@@ -111,3 +118,7 @@ instance (Functor f, Functor g) => Functor (f :*: g) where
 
 instance Functor f => Functor (C c f) where
   fmap f (C r) = C (fmap f r)
+
+instance Functor f => Functor (S c f) where
+  fmap f (S r) = S (fmap f r)
+
