@@ -13,8 +13,11 @@
 -- Stability   :  experimental
 -- Portability :  non-portable
 --
--- Summary: Generic functionality for regular dataypes: mapM, flatten, zip,
--- equality, show, value generation and fold.
+-- Summary: All of the generic functionality for regular dataypes: mapM, 
+-- flatten, zip, equality, value generation, fold and unfold.
+-- Generic show ("Generics.Regular.Functions.Show") and generic read 
+-- ("Generics.Regular.Functions.Read") are not exported to prevent clashes
+-- with @Prelude@.
 -----------------------------------------------------------------------------
 
 module Generics.Regular.Functions (
@@ -34,12 +37,6 @@ module Generics.Regular.Functions (
   -- * Generating values that are different on top-level
   module Generics.Regular.Functions.LR,
   
-  -- * Read
-  module Generics.Regular.Functions.Read,
-  
-  -- * Show
-  module Generics.Regular.Functions.Show,
-  
   -- * Zipping
   module Generics.Regular.Functions.Zip
 
@@ -50,6 +47,4 @@ import Generics.Regular.Functions.Eq
 import Generics.Regular.Functions.Fold
 import Generics.Regular.Functions.GMap
 import Generics.Regular.Functions.LR
-import Generics.Regular.Functions.Read
-import Generics.Regular.Functions.Show
 import Generics.Regular.Functions.Zip

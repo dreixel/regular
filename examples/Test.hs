@@ -6,8 +6,10 @@
 module Test where
 
 import Generics.Regular
-import qualified Generics.Regular.Functions as G
-import Generics.Regular.Functions.Fold
+import Generics.Regular.Functions
+import qualified Generics.Regular.Functions.Show as G
+import qualified Generics.Regular.Functions.Read as G
+
 
 -- * Datatype representing logical expressions
 data Logic = Var String
@@ -32,12 +34,12 @@ l3 = l1 :->: l2
 
 -- * Testing flattening
 ex0 :: [Logic]
-ex0 = G.flattenr (from l3)
+ex0 = flattenr (from l3)
 
 -- * Testing generic equality
 ex1, ex2 :: Bool
-ex1 = G.eq l3 l3
-ex2 = G.eq l3 l2
+ex1 = eq l3 l3
+ex2 = eq l3 l2
 
 -- * Testing generic show
 ex3 :: String
@@ -49,13 +51,17 @@ ex4 = G.read ex3
 
 -- * Testing value generation
 ex5, ex6 :: Logic
-ex5 = G.left
-ex6 = G.right
+ex5 = left
+ex6 = right
 
 -- * Testing folding
-ex7 :: (String -> Bool) -> Logic -> Bool
-ex7 env = G.fold (env & impl & (==) & (&&) & (||) & not & True & False)
-  where impl p q = not p || q
+ex7 :: Bool
+ex7 = fold (alg (\_ -> False)) l3 where
+  alg env = (env & impl & (==) & (&&) & (||) & not & True & False)
+  impl p q = not p || q
 
-ex8 :: Bool
-ex8 = ex7 (\_ -> False) l3
+-- * Testing unfolding
+ex8 :: Int -> Logic
+ex8 n = unfold (alg n) where
+  --alg :: CoAlgebra Logic Int
+  alg n = Left ""

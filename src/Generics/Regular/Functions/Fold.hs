@@ -122,7 +122,7 @@ type instance CoAlg (K a) s = a
 type instance CoAlg I s = s
 
 -- | For a sum, the coalgebra produces either the left or the right side. When
--- one of the sides is a U we optimize this a away by using a Maybe, similarly
+-- one of the sides is a U we optimize this away by using a Maybe, similarly
 -- to the specific 'Data.List.unfold' for []. These type instances for sum
 -- automatically ignore the constructors.
 type instance CoAlg (C c (f :*: g) :+: C d U)         s = Maybe  (CoAlg (f :*: g) s)

@@ -13,7 +13,8 @@
 -- Stability   :  experimental
 -- Portability :  non-portable
 --
--- Summary: Generic read.
+-- Summary: Generic read. This module is not exported by 
+-- "Generics.Regular.Functions" to avoid clashes with "Prelude".
 -----------------------------------------------------------------------------
 
 module Generics.Regular.Functions.Read (
@@ -136,7 +137,7 @@ readPrefixCons f b r name = parens . prec appPrec $
                                     guard (s == n)
           prefixConsNm s False = do Punc "(" <-lexP
                                     Symbol n <- lexP
-                                    guard (s==n)   
+                                    guard (s == n)
                                     Punc ")" <- lexP
                                     return ()
 
@@ -156,12 +157,12 @@ readInfixCons f (asc,prc,b) name = parens . prec prc $
                                           parens (infixConsNm name b)
                                           y <- (if asc == RightAssociative then id else step) (hreader f False)
                                           return  (x :*: y)
-     where  infixConsNm s True  = do Symbol n <- lexP 
+     where  infixConsNm s True  = do Symbol n <- lexP
                                      guard (n == s) 
             infixConsNm s False = do Punc "`"  <- lexP
-                                     Ident n   <- lexP  
+                                     Ident n   <- lexP
                                      guard (n == s)
-                                     Punc "`"  <- lexP 
+                                     Punc "`"  <- lexP
                                      return ()
 
 readNoArgsCons :: ReadPrec a -> String -> ReadPrec (U a)
