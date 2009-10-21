@@ -62,6 +62,7 @@ ex7 = fold (alg (\_ -> False)) l3 where
 
 -- * Testing unfolding
 ex8 :: Int -> Logic
-ex8 n = unfold (alg n) where
-  --alg :: CoAlgebra Logic Int
-  alg n = Left ""
+ex8 n = unfold alg n where
+  alg :: CoAlgebra Logic Int
+  alg n | odd n || n <= 0 = Left ""
+        | even n          = Right (Left (n-1,n-2))

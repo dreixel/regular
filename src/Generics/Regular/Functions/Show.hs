@@ -3,7 +3,7 @@
 
 -----------------------------------------------------------------------------
 -- |
--- Module      :  Generics.Regular.Functions.HShow
+-- Module      :  Generics.Regular.Functions.Show
 -- Copyright   :  (c) 2008 Universiteit Utrecht
 -- License     :  BSD3
 --
@@ -17,8 +17,8 @@
 
 module Generics.Regular.Functions.Show (
 
-  -- * HShow function
-  HShow (..),
+  -- * Show function
+  Show (..),
   show, shows
 
 ) where
@@ -29,32 +29,32 @@ import qualified Prelude as P (Show, showsPrec)
 
 
 -----------------------------------------------------------------------------
--- HShow function.
+-- Show function.
 -----------------------------------------------------------------------------
 
--- | The @HShow@ class defines a show on values.
-class HShow f where
+-- | The @Show@ class defines a show on values.
+class Show f where
   hshowsPrec :: (Int -> a -> ShowS) -> Bool -> Int -> f a -> ShowS
 
-instance HShow I where
+instance Show I where
   hshowsPrec f _ n (I r) = f n r
 
-instance (P.Show a) => HShow (K a) where
+instance (P.Show a) => Show (K a) where
   hshowsPrec _ _ n (K x) = P.showsPrec n x
 
-instance HShow U where
-  hshowsPrec _ _ n U = id
+instance Show U where
+  hshowsPrec _ _ _ U = id
 
-instance (HShow f, HShow g) => HShow (f :+: g) where
+instance (Show f, Show g) => Show (f :+: g) where
   hshowsPrec f b n (L x) = hshowsPrec f b n x
   hshowsPrec f b n (R x) = hshowsPrec f b n x
 
-instance (HShow f, HShow g) => HShow (f :*: g) where
+instance (Show f, Show g) => Show (f :*: g) where
   hshowsPrec f b n (x :*: y) = hshowsPrec f b n x 
                              . (if b then showString ", " else showString " ")
                              . hshowsPrec f b n y
 
-instance (Constructor c, HShow f) => HShow (C c f) where
+instance (Constructor c, Show f) => Show (C c f) where
   hshowsPrec f _ n cx@(C x) = case fixity of
     Prefix -> showParen True (showString (conName cx) . showChar ' '                              . showBraces isRecord (hshowsPrec f isRecord n x))
     Infix _ n' -> showParen True 
@@ -67,16 +67,16 @@ instance (Constructor c, HShow f) => HShow (C c f) where
 showBraces       :: Bool -> ShowS -> ShowS
 showBraces b p   =  if b then showChar '{' . p . showChar '}' else p
 
-instance (Selector s, HShow f) => HShow (S s f) where
+instance (Selector s, Show f) => Show (S s f) where
   hshowsPrec f b n s@(S x) = showString (selName s) . showString " = " 
                            . hshowsPrec f b n x
 
 
-showsPrec :: (Regular a, HShow (PF a)) => Int -> a -> ShowS
+showsPrec :: (Regular a, Show (PF a)) => Int -> a -> ShowS
 showsPrec n x = hshowsPrec showsPrec False n (from x)
 
-shows :: (Regular a, HShow (PF a)) => a -> ShowS
+shows :: (Regular a, Show (PF a)) => a -> ShowS
 shows = showsPrec 0
 
-show :: (Regular a, HShow (PF a)) => a -> String
+show :: (Regular a, Show (PF a)) => a -> String
 show x = shows x ""

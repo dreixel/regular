@@ -20,7 +20,7 @@
 module Generics.Regular.Functions.Read (
 
     -- * Read functions
-    HReadPrec(..),
+    Read(..),
     read, readPrec, readsPrec
 
 ) where
@@ -33,9 +33,9 @@ import Generics.Regular.Base
 
 import Data.Char
 import Control.Monad
-import Text.Read hiding (readsPrec, readPrec, read)
-import Prelude hiding (readsPrec, read)
-import qualified Prelude as P (readsPrec)
+import Text.Read hiding (readsPrec, readPrec, read, Read)
+import Prelude hiding (readsPrec, read, Read)
+import qualified Prelude as P (readsPrec, Read)
 import Text.Read.Lex
 import Text.ParserCombinators.ReadPrec
 
@@ -59,23 +59,23 @@ instance CountAtoms f => CountAtoms (S s f) where
 
 -- * Generic read
 
-class HReadPrec f where
+class Read f where
    hreader :: ReadPrec a -> Bool -> ReadPrec (f a)
 
 
-instance HReadPrec U where
+instance Read U where
    hreader _ _ = return U
 
-instance (Read a) => HReadPrec (K a) where
+instance (P.Read a) => Read (K a) where
    hreader _ _ = liftM K (readS_to_Prec P.readsPrec)
 
-instance HReadPrec I where
+instance Read I where
    hreader f _ = liftM I f
 
-instance (HReadPrec f, HReadPrec g) => HReadPrec (f :+: g) where
+instance (Read f, Read g) => Read (f :+: g) where
    hreader f r = liftM L (hreader f r) +++ liftM R (hreader f r)
 
-instance (HReadPrec f, HReadPrec g) => HReadPrec (f :*: g) where
+instance (Read f, Read g) => Read (f :*: g) where
    hreader f r = do l' <- hreader f r
                     when r $ do Punc "," <- lexP
                                 return ()
@@ -86,30 +86,30 @@ instance (HReadPrec f, HReadPrec g) => HReadPrec (f :*: g) where
 
 -- Dealing with constructors
 -- No arguments
-instance (Constructor c) => HReadPrec (C c U) where
+instance (Constructor c) => Read (C c U) where
    hreader f _ = let constr = undefined :: C c U r
                      name   = conName constr
                  in readCons (readNoArgsCons f name)
 
 -- 1 argument
-instance (Constructor c, HReadPrec I) => HReadPrec (C c I) where
+instance (Constructor c, Read I) => Read (C c I) where
    hreader f _ = let constr = undefined :: C c I r
                      name   = conName constr
                  in  readCons (readPrefixCons f True False name)
 
-instance (Constructor c, HReadPrec (K a)) => HReadPrec (C c (K a)) where
+instance (Constructor c, Read (K a)) => Read (C c (K a)) where
    hreader f _ = let constr = undefined :: C c (K a) r
                      name   = conName constr
                  in  readCons (readPrefixCons f True False name) 
 
-instance (Constructor c, HReadPrec (S s f)) => HReadPrec (C c (S s f)) where
+instance (Constructor c, Read (S s f)) => Read (C c (S s f)) where
    hreader f _ = let constr = undefined :: C c (K a) r
                      name   = conName constr
                  in  readCons (readPrefixCons f True True name)
 
 -- 2 arguments or more
-instance (Constructor c, CountAtoms (f :*: g), HReadPrec f, HReadPrec g) 
-         => HReadPrec (C c (f:*:g)) where
+instance (Constructor c, CountAtoms (f :*: g), Read f, Read g) 
+         => Read (C c (f:*:g)) where
    hreader f _ = let constr = undefined :: C c (f:*:g) r
                      name   = conName constr
                      fixity = conFixity constr
@@ -128,7 +128,7 @@ instance (Constructor c, CountAtoms (f :*: g), HReadPrec f, HReadPrec g)
 readCons :: (Constructor c) => ReadPrec (f a) -> ReadPrec (C c f a)
 readCons = liftM C
 
-readPrefixCons :: (HReadPrec f) 
+readPrefixCons :: (Read f) 
                => ReadPrec a -> Bool -> Bool -> String -> ReadPrec (f a)
 readPrefixCons f b r name = parens . prec appPrec $
                             do parens (prefixConsNm name b) 
@@ -150,7 +150,7 @@ braces f = do hasBraces <- try $ do {Punc "{" <- lexP; return ()}
              try p = (p >> return True) `mplus` return False
 
 
-readInfixCons :: (HReadPrec f, HReadPrec g)
+readInfixCons :: (Read f, Read g)
               => ReadPrec a -> (Associativity,Int,Bool) -> String -> ReadPrec ((f :*: g) a)
 readInfixCons f (asc,prc,b) name = parens . prec prc $
                                        do x <- {- (if asc == LeftAssociative  then id else step) -} step (hreader f False)
@@ -174,7 +174,7 @@ readNoArgsCons _ name = parens $
 appPrec :: Prec
 appPrec = 10
 
-instance (Selector s, HReadPrec f) => HReadPrec (S s f) where
+instance (Selector s, Read f) => Read (S s f) where
    hreader f r = do when r $ do Ident n <- lexP
                                 guard (n == selName (undefined :: S s f a))
                                 Punc "=" <- lexP
@@ -184,13 +184,13 @@ instance (Selector s, HReadPrec f) => HReadPrec (S s f) where
 
 -- Exported functions
 
-readPrec :: (Regular a, HReadPrec (PF a)) => ReadPrec a
+readPrec :: (Regular a, Read (PF a)) => ReadPrec a
 readPrec = liftM to (hreader readPrec False)
 
-readsPrec :: (Regular a, HReadPrec (PF a)) => Int -> ReadS a
+readsPrec :: (Regular a, Read (PF a)) => Int -> ReadS a
 readsPrec n = readPrec_to_S readPrec n
 
-read :: (Regular a, HReadPrec (PF a)) => String -> a
+read :: (Regular a, Read (PF a)) => String -> a
 read s = case [x |  (x,remain) <- readsPrec 0 s , all isSpace remain] of
            [x] -> x 
            [ ] -> error "no parse"

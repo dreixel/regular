@@ -13,7 +13,7 @@
 -- Stability   :  experimental
 -- Portability :  non-portable
 --
--- Summary: Generic folding.
+-- Summary: Generic folding and unfolding.
 -----------------------------------------------------------------------------
 
 module Generics.Regular.Functions.Fold (
@@ -23,10 +23,12 @@ module Generics.Regular.Functions.Fold (
   Fold, alg,
   fold,
   
+  -- * Generic unfolding
   CoAlg, CoAlgebra,
   Unfold, coalg,
   unfold,
   
+  -- * Construction of algebras
   (&)  
 
 ) where
@@ -121,13 +123,12 @@ type instance CoAlg (K a) s = a
 -- | For an identity, we produce a new seed to create the recursive result.
 type instance CoAlg I s = s
 
--- | For a sum, the coalgebra produces either the left or the right side. When
--- one of the sides is a U we optimize this away by using a Maybe, similarly
--- to the specific 'Data.List.unfold' for []. These type instances for sum
--- automatically ignore the constructors.
-type instance CoAlg (C c (f :*: g) :+: C d U)         s = Maybe  (CoAlg (f :*: g) s)
-type instance CoAlg (C c U         :+: C d (f :*: g)) s = Maybe  (CoAlg (f :*: g) s)
-type instance CoAlg (C c (e :*: f) :+: C d (g :*: h)) s = Either (CoAlg (e :*: f) s) (CoAlg (g :*: h) s)
+-- | Units can only produce units, so we use the singleton type to encode the
+-- lack of choice.
+type instance CoAlg U s = ()
+
+-- | For a sum, the coalgebra produces either the left or the right side. 
+type instance CoAlg (f :+: g) s = Either (CoAlg f s) (CoAlg g s)
 
 -- | For a produt, the coalgebra is a pair of the two arms.
 type instance CoAlg (f :*: g) s = (CoAlg f s, CoAlg g s)
@@ -150,21 +151,19 @@ instance Unfold (K a) where
 
 instance Unfold I where
   coalg r a = I (r a)
+  
+instance Unfold U where
+  coalg _ _ = U
 
-instance (Unfold f, Unfold g) => Unfold (C c (f :*: g) :+: C d U) where
-  coalg r (Just  c) = L (C (coalg r c))
-  coalg _ Nothing   = R (C U)
-
-instance (Unfold f, Unfold g) => Unfold (C c U :+: C d (f :*: g)) where
-  coalg _ Nothing   = L (C U)
-  coalg r (Just  c) = R (C (coalg r c))
-
-instance (Unfold e, Unfold f, Unfold g, Unfold h) => Unfold (C c (e :*: f) :+: C d (g :*: h)) where
-  coalg r (Left  c) = L (C (coalg r c))
-  coalg r (Right c) = R (C (coalg r c))
+instance (Unfold f, Unfold g) => Unfold (f :+: g) where
+  coalg r (Left  c) = L (coalg r c)
+  coalg r (Right c) = R (coalg r c)
 
 instance (Unfold f, Unfold g) => Unfold (f :*: g) where
   coalg r (c, g) = coalg r c :*: coalg r g
+
+instance Unfold f => Unfold (C c f) where
+  coalg r = C . coalg r
 
 instance Unfold f => Unfold (S s f) where
   coalg r = S . coalg r
