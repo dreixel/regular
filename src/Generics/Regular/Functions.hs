@@ -22,6 +22,9 @@
 
 module Generics.Regular.Functions (
   
+  -- * Constructor names
+  module Generics.Regular.Functions.ConNames,
+  
   -- * Crush
   module Generics.Regular.Functions.Crush,
   
@@ -37,14 +40,19 @@ module Generics.Regular.Functions (
   -- * Generating values that are different on top-level
   module Generics.Regular.Functions.LR,
   
+  -- * Deep seq
+  module Generics.Regular.Functions.Seq,
+  
   -- * Zipping
   module Generics.Regular.Functions.Zip
 
 ) where
 
+import Generics.Regular.Functions.ConNames
 import Generics.Regular.Functions.Crush
 import Generics.Regular.Functions.Eq
 import Generics.Regular.Functions.Fold
 import Generics.Regular.Functions.GMap
 import Generics.Regular.Functions.LR
+import Generics.Regular.Functions.Seq
 import Generics.Regular.Functions.Zip

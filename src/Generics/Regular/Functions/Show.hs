@@ -57,7 +57,7 @@ instance (Show f, Show g) => Show (f :*: g) where
 instance (Constructor c, Show f) => Show (C c f) where
   hshowsPrec f _ n cx@(C x) = case fixity of
     Prefix -> showParen True (showString (conName cx) . showChar ' '                              . showBraces isRecord (hshowsPrec f isRecord n x))
-    Infix _ n' -> showParen True 
+    Infix _ _ -> showParen True 
                     (showChar '(' . showString (conName cx) 
                      . showChar ')' . showChar ' ' 
                      . showBraces isRecord (hshowsPrec f isRecord n x))

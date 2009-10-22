@@ -48,12 +48,14 @@ library
                         Generics.Regular.TH
                         
                         Generics.Regular.Functions
+                        Generics.Regular.Functions.ConNames
                         Generics.Regular.Functions.Crush
                         Generics.Regular.Functions.Eq
                         Generics.Regular.Functions.Fold
                         Generics.Regular.Functions.GMap
                         Generics.Regular.Functions.LR
                         Generics.Regular.Functions.Read
+                        Generics.Regular.Functions.Seq
                         Generics.Regular.Functions.Show
                         Generics.Regular.Functions.Zip
                         
