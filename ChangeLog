@@ -4,5 +4,7 @@ version 0.2:
   - Added record selectors (thanks to Sebastiaan Visser)
   - Improved generic show (thanks to Sebastiaan Visser), added showsPrec
   - Added generic read (thanks to Rui Barbosa)
+  - Added generic deep seq (thanks to Sebastiaan Visser)
+  - Added constructor names (thanks to Johan Jeuring)
 
 version 0.1: initial release
