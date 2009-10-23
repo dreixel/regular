@@ -22,31 +22,31 @@
 
 module Generics.Regular.Functions (
   
-  -- * Constructor names
-  module Generics.Regular.Functions.ConNames,
-  
-  -- * Crush
-  module Generics.Regular.Functions.Crush,
-  
-  -- * Equality
-  module Generics.Regular.Functions.Eq,
-  
-  -- * Generic folding
-  module Generics.Regular.Functions.Fold,
-  
-  -- * Functorial map
-  module Generics.Regular.Functions.GMap,
-  
-  -- * Generating values that are different on top-level
-  module Generics.Regular.Functions.LR,
-  
-  -- * Deep seq
-  module Generics.Regular.Functions.Seq,
-  
-  -- * Zipping
-  module Generics.Regular.Functions.Zip
+    -- * Constructor names
+    module Generics.Regular.Functions.ConNames,
+    
+    -- * Crush
+    module Generics.Regular.Functions.Crush,
+    
+    -- * Equality
+    module Generics.Regular.Functions.Eq,
+    
+    -- * Generic folding
+    module Generics.Regular.Functions.Fold,
+    
+    -- * Functorial map
+    module Generics.Regular.Functions.GMap,
+    
+    -- * Generating values that are different on top-level
+    module Generics.Regular.Functions.LR,
+    
+    -- * Deep seq
+    module Generics.Regular.Functions.Seq,
+    
+    -- * Zipping
+    module Generics.Regular.Functions.Zip
 
-) where
+  ) where
 
 import Generics.Regular.Functions.ConNames
 import Generics.Regular.Functions.Crush

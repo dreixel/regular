@@ -17,7 +17,7 @@
 
 module Generics.Regular.Functions.Seq (
 
-    DeepSeq (..), GSeq(..), gdseq
+    DeepSeq (..), Seq(..), gdseq
     
   ) where
 
@@ -25,42 +25,42 @@ import Data.List
 import Generics.Regular.Base
 
 -- | The class for generic deep seq.
-class GSeq f where
+class Seq f where
   gseq :: (a -> b -> b) -> f a -> b -> b
 
-instance GSeq I where
+instance Seq I where
   gseq f (I x) = f x
 
 -- | For constants we rely on the |DeepSeq| class.
-instance (DeepSeq a) => GSeq (K a) where
+instance (DeepSeq a) => Seq (K a) where
   gseq _ (K x) = dseq x
   
-instance GSeq U where
+instance Seq U where
   gseq _ U = id
 
-instance (GSeq f, GSeq g) => GSeq (f :+: g) where
+instance (Seq f, Seq g) => Seq (f :+: g) where
   gseq f (L x) = gseq f x
   gseq f (R y) = gseq f y
 
-instance (GSeq f, GSeq g) => GSeq (f :*: g) where
+instance (Seq f, Seq g) => Seq (f :*: g) where
   gseq f (x :*: y) = gseq f x . gseq f y
 
-instance GSeq f => GSeq (C c f) where
+instance Seq f => Seq (C c f) where
   gseq f (C x) = gseq f x
 
-instance GSeq f => GSeq (S s f) where
+instance Seq f => Seq (S s f) where
   gseq f (S x) = gseq f x
 
 -- | Deep, generic version of seq.
 
-gdseq :: (Regular a, GSeq (PF a)) => a -> b -> b
+gdseq :: (Regular a, Seq (PF a)) => a -> b -> b
 gdseq p = gseq gdseq (from p)
 
 -- | A general class for expressing deep seq. It is used in the 'K' case for
 -- the generic seq.
 --
 -- We do not give an instance of the form
--- @instance (Regular a, GSeq (PF a)) => DeepSeq a where dseq = gdseq@
+-- @instance (Regular a, Seq (PF a)) => DeepSeq a where dseq = gdseq@
 -- because this requires undecidable instances. However, any type for which
 -- there is a generic instance can be given a trivial instance of 'DeepSeq' by
 -- using 'gdseq'.
