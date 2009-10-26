@@ -24,11 +24,7 @@ category:               Generics
 copyright:              (c) 2009 Universiteit Utrecht
 license:                BSD3
 license-file:           LICENSE
-author:                 Thomas van Noort,
-                        Alexey Rodriguez,
-                        Stefan Holdermans,
-                        Johan Jeuring,
-                        Bastiaan Heeren
+author:                 Jose Pedro Magalhaes
 maintainer:             generics@haskell.org
 stability:              experimental
 build-type:             Custom
