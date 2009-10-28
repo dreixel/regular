@@ -16,7 +16,7 @@ This library is the underlying generic representation mechanism in the paper:
   pages 13–24. ACM Press, 2008.
 
 More information is available on the webpage: 
-http://www.cs.uu.nl/wiki/bin/view/GenericProgramming/Regular
+http://www.cs.uu.nl/wiki/GenericProgramming/Regular
 
 Features
 --------
@@ -26,7 +26,7 @@ Features
 * Includes detailed examples, such as the generic fold
 
 * Forms the basis for a generic rewriting library:
-  http://hackage.haskell.org/cgi-bin/hackage-scripts/package/rewriting
+  http://hackage.haskell.org/package/rewriting
 
 * In its current form, this library does not support nested datatypes. Support 
   to access parameters of a datatype is limited.
@@ -46,7 +46,7 @@ With cabal-install:
 
 Get the package:
 
-  http://hackage.haskell.org/cgi-bin/hackage-scripts/package/regular
+  http://hackage.haskell.org/package/regular
 
 Get the source:
 
