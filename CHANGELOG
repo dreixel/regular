@@ -1,3 +1,7 @@
+version 0.2.1:
+  - Do not export generic equality by default to avoid clashes with Prelude
+  - Turn I and K into newtypes
+
 version 0.2:
   - Separated generic functions per modules
   - Added generic unfold

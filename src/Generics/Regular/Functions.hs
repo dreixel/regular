@@ -15,8 +15,9 @@
 --
 -- Summary: All of the generic functionality for regular dataypes: mapM, 
 -- flatten, zip, equality, value generation, fold and unfold.
--- Generic show ("Generics.Regular.Functions.Show") and generic read 
--- ("Generics.Regular.Functions.Read") are not exported to prevent clashes
+-- Generic show ("Generics.Regular.Functions.Show"), generic read 
+-- ("Generics.Regular.Functions.Read") and generic equality 
+-- ("Generics.Regular.Functions.Eq") are not exported to prevent clashes
 -- with @Prelude@.
 -----------------------------------------------------------------------------
 
@@ -27,9 +28,6 @@ module Generics.Regular.Functions (
     
     -- * Crush
     module Generics.Regular.Functions.Crush,
-    
-    -- * Equality
-    module Generics.Regular.Functions.Eq,
     
     -- * Generic folding
     module Generics.Regular.Functions.Fold,
@@ -50,7 +48,6 @@ module Generics.Regular.Functions (
 
 import Generics.Regular.Functions.ConNames
 import Generics.Regular.Functions.Crush
-import Generics.Regular.Functions.Eq
 import Generics.Regular.Functions.Fold
 import Generics.Regular.Functions.GMap
 import Generics.Regular.Functions.LR

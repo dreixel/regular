@@ -46,10 +46,10 @@ import Generics.Regular.Selector
 -----------------------------------------------------------------------------
 
 -- | Structure type for constant values.
-data K a r       = K { unK :: a }
+newtype K a r    = K { unK :: a }
 
 -- | Structure type for recursive values.
-data I r         = I { unI :: r }
+newtype I r      = I { unI :: r }
 
 -- | Structure type for empty constructors.
 data U r         = U
