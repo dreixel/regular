@@ -36,8 +36,6 @@ import Control.Monad
 import Text.Read hiding (readsPrec, readPrec, read, Read)
 import Prelude hiding (readsPrec, read, Read)
 import qualified Prelude as P (readsPrec, Read)
-import Text.Read.Lex
-import Text.ParserCombinators.ReadPrec
 
 -- * Count the number of terms in a product
 
