@@ -9,6 +9,7 @@ import Generics.Regular
 import Generics.Regular.Functions
 import qualified Generics.Regular.Functions.Show as G
 import qualified Generics.Regular.Functions.Read as G
+import Generics.Regular.Functions.Eq
 
 
 -- Datatype representing logical expressions
