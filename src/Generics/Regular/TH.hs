@@ -1,4 +1,4 @@
-{-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE TemplateHaskell, CPP #-}
 {-# OPTIONS_GHC -w           #-}
 
 -----------------------------------------------------------------------------
@@ -80,7 +80,7 @@ deriveInst :: Name -> Q [Dec]
 deriveInst t =
   do
     i <- reify t
-    let typ = foldl (\a -> AppT a . VarT) (ConT t) (typeVariables i)
+    let typ = foldl (\a -> AppT a . VarT . tyVarBndrToName) (ConT t) (typeVariables i)
     fcs <- mkFrom t 1 0 t
     tcs <- mkTo   t 1 0 t
     liftM (:[]) $
@@ -115,10 +115,23 @@ selectInstance n =
       is <- mapM (mkSelectInstance n) cs
       return $ concat (ds ++ is)
 
+#ifdef TH_TYVARBNDR
+typeVariables :: Info -> [TyVarBndr]
+#else
 typeVariables :: Info -> [Name]
+#endif
 typeVariables (TyConI (DataD    _ _ tv _ _)) = tv
 typeVariables (TyConI (NewtypeD _ _ tv _ _)) = tv
 typeVariables _                           = []
+
+#ifdef TH_TYVARBNDR
+tyVarBndrToName :: TyVarBndr -> Name
+tyVarBndrToName (PlainTV  name)   = name
+tyVarBndrToName (KindedTV name _) = name
+#else
+tyVarBndrToName :: Name -> Name
+tyVarBndrToName = id
+#endif
 
 stripRecordNames :: Con -> Con
 stripRecordNames (RecC n f) =
@@ -189,9 +202,9 @@ pfType n =
       i <- reify n
       let b = case i of
                 TyConI (DataD _ dt vs cs _) ->
-                  foldr1 sum (map (pfCon (dt, vs)) cs)
+                  foldr1 sum (map (pfCon (dt, map tyVarBndrToName vs)) cs)
                 TyConI (NewtypeD _ dt vs c _) ->
-                  pfCon (dt, vs) c
+                  pfCon (dt, map tyVarBndrToName vs) c
                 TyConI (TySynD t _ _) ->
                   conT ''K `appT` conT t
                 _ -> error "unknown construct" 
@@ -240,9 +253,9 @@ mkFrom ns m i n =
       i <- reify n
       let b = case i of
                 TyConI (DataD _ dt vs cs _) ->
-                  zipWith (fromCon wrapE ns (dt, vs) (length cs)) [0..] cs
+                  zipWith (fromCon wrapE ns (dt, map tyVarBndrToName vs) (length cs)) [0..] cs
                 TyConI (NewtypeD _ dt vs c _) ->
-                  [fromCon wrapE ns (dt, vs) 1 0 c]
+                  [fromCon wrapE ns (dt, map tyVarBndrToName vs) 1 0 c]
                 TyConI (TySynD t _ _) ->
                   [clause [varP (field 0)] (normalB (wrapE $ conE 'K `appE` varE (field 0))) []]
                 _ -> error "unknown construct"
@@ -256,9 +269,9 @@ mkTo ns m i n =
       i <- reify n
       let b = case i of
                 TyConI (DataD _ dt vs cs _) ->
-                  zipWith (toCon wrapP ns (dt, vs) (length cs)) [0..] cs
+                  zipWith (toCon wrapP ns (dt, map tyVarBndrToName vs) (length cs)) [0..] cs
                 TyConI (NewtypeD _ dt vs c _) ->
-                  [toCon wrapP ns (dt, vs) 1 0 c]
+                  [toCon wrapP ns (dt, map tyVarBndrToName vs) 1 0 c]
                 TyConI (TySynD t _ _) ->
                   [clause [wrapP $ conP 'K [varP (field 0)]] (normalB $ varE (field 0)) []]
                 _ -> error "unknown construct" 

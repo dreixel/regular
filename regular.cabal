@@ -34,6 +34,9 @@ extra-source-files:     examples/Test.hs
                         ChangeLog
                         CREDITS
 
+flag th24
+  description:          Indicates that Template Haskell 2.4 or greater is available.
+
 library
   hs-source-dirs:       src
   exposed-modules:      Generics.Regular
@@ -54,5 +57,10 @@ library
                         Generics.Regular.Functions.Show
                         Generics.Regular.Functions.Zip
                         
-  build-depends:        base >= 4.0 && < 5, template-haskell >= 2.2 && < 2.4
+  build-depends:        base >= 4.0 && < 5
+  if flag(th24)
+    build-depends:      template-haskell == 2.4.*
+    cpp-options:          -DTH_TYVARBNDR
+  else
+    build-depends:      template-haskell >= 2.2 && < 2.4
   ghc-options:          -Wall
