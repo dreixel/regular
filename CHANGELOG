@@ -1,3 +1,8 @@
+version 0.2.2:
+  - Update to build with ghc-6.12: require template-haskell-2.4.*, adapt
+    Generics.Regular.TH accordingly and use CPP to maintain compatibility with
+    ghc-6.10
+
 version 0.2.1:
   - Do not export generic equality by default to avoid clashes with Prelude
   - Turn I and K into newtypes
