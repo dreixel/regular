@@ -59,7 +59,7 @@ library
                         
   build-depends:        base >= 4.0 && < 5
   if flag(th24)
-    build-depends:      template-haskell == 2.4.*
+    build-depends:      template-haskell >=2.4 && <2.5
     cpp-options:          -DTH_TYVARBNDR
   else
     build-depends:      template-haskell >= 2.2 && < 2.4
