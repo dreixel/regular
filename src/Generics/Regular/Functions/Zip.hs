@@ -49,7 +49,7 @@ instance Zip U where
 instance (Zip f, Zip g) => Zip (f :+: g) where
   fzipM f (L x) (L y) = liftM L (fzipM f x y)
   fzipM f (R x) (R y) = liftM R (fzipM f x y)
-  fzipM _ _       _       = fail "fzipM: structure mismatch"
+  fzipM _ _       _   = fail "fzipM: structure mismatch"
 
 instance (Zip f, Zip g) => Zip (f :*: g) where
   fzipM f (x1 :*: y1) (x2 :*: y2) = 
