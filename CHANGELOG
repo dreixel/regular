@@ -1,3 +1,7 @@
+version 0.2.4:
+  - Export Assoc(..) from Generics.Regular.Functions.Crush (thanks to Martijn
+    van Steenbergen).
+
 version 0.2.3:
   - Replaced the flag on the cabal package by an explicit test on the ghc
     version. This makes it easier to build on ghc-6.12.

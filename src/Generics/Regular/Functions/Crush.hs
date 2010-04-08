@@ -16,7 +16,7 @@
 module Generics.Regular.Functions.Crush (
 
   -- * Crush functions
-  Crush (..),
+  Crush (..), Assoc(..),
   flattenl, flattenr, crushr, crushl
 
 ) where
