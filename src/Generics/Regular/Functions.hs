@@ -6,7 +6,7 @@
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Generics.Regular.Functions
--- Copyright   :  (c) 2008 Universiteit Utrecht
+-- Copyright   :  (c) 2010 Universiteit Utrecht
 -- License     :  BSD3
 --
 -- Maintainer  :  generics@haskell.org
@@ -38,9 +38,6 @@ module Generics.Regular.Functions (
     -- * Generating values that are different on top-level
     module Generics.Regular.Functions.LR,
     
-    -- * Deep seq
-    module Generics.Regular.Functions.Seq,
-    
     -- * Zipping
     module Generics.Regular.Functions.Zip
 
@@ -51,5 +48,4 @@ import Generics.Regular.Functions.Crush
 import Generics.Regular.Functions.Fold
 import Generics.Regular.Functions.GMap
 import Generics.Regular.Functions.LR
-import Generics.Regular.Functions.Seq
 import Generics.Regular.Functions.Zip
