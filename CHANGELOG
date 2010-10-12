@@ -1,3 +1,7 @@
+version 0.3.0:
+  - Remove gdseq (moved to the regular-extras package due to the introduction
+    of the deepseq dependency).
+
 version 0.2.4:
   - Export Assoc(..) from Generics.Regular.Functions.Crush (thanks to Martijn
     van Steenbergen).
