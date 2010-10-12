@@ -70,6 +70,3 @@ ex8 n = unfold alg n where
 
 -- Testing conNames
 ex9 = conNames (undefined :: Logic)
-
--- Testing deep seq
-ex10 = gdseq (Not (T :->: (error "deep seq works"))) ()
