@@ -6,7 +6,7 @@
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Generics.Regular.Functions.Read
--- Copyright   :  (c) 2008 Universiteit Utrecht
+-- Copyright   :  (c) 2010 Universiteit Utrecht
 -- License     :  BSD3
 --
 -- Maintainer  :  generics@haskell.org
@@ -106,7 +106,7 @@ instance (Constructor c, Read (S s f)) => Read (C c (S s f)) where
                  in  readCons (readPrefixCons f True True name)
 
 -- 2 arguments or more
-instance (Constructor c, CountAtoms (f :*: g), Read f, Read g) 
+instance (Constructor c, CountAtoms f, CountAtoms g, Read f, Read g) 
          => Read (C c (f:*:g)) where
    hreader f _ = let constr = undefined :: C c (f:*:g) r
                      name   = conName constr

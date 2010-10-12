@@ -29,7 +29,7 @@ maintainer:             generics@haskell.org
 stability:              experimental
 build-type:             Custom
 cabal-version:          >= 1.2.1
-tested-with:            GHC == 6.10.1
+tested-with:            GHC == 6.10.4, GHC == 6.12.1, GHC == 7.0.0.20100925
 extra-source-files:     examples/Test.hs
                         ChangeLog
                         CREDITS
@@ -55,7 +55,7 @@ library
                         
   build-depends:        base >= 4.0 && < 5
   if impl(ghc >= 6.12)
-    build-depends:      template-haskell >=2.4 && <2.5
+    build-depends:      template-haskell >=2.4 && <2.6
     cpp-options:          -DTH_TYVARBNDR
   else
     build-depends:      template-haskell >= 2.2 && < 2.4
