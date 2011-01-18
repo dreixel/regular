@@ -11,7 +11,12 @@ import qualified Generics.Regular.Functions.Show as G
 import qualified Generics.Regular.Functions.Read as G
 import Generics.Regular.Functions.Eq
 
+data X = X {one :: Int, three :: Float}
 
+$(deriveAll ''X "Y")
+type instance PF X = Y
+
+{-
 -- Datatype representing logical expressions
 data Logic = Var String
            | Logic :->:  Logic  -- implication
@@ -70,3 +75,4 @@ ex8 n = unfold alg n where
 
 -- Testing conNames
 ex9 = conNames (undefined :: Logic)
+-}

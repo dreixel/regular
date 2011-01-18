@@ -242,8 +242,8 @@ pfField d t | t == dataDeclToType d = conT ''I
 pfField d t                         = conT ''K `appT` return t
 
 pfField' :: (Name, [Name]) -> Name -> (Name, Strict, Type) -> Q Type
-pfField' d ns (_, _, t) | t == dataDeclToType d = conT ''I
-pfField' (dt, vs) ns (f, _, t)                  = conT ''S `appT` conT (genName [dt, ns, f]) `appT` (conT ''K `appT` return t)
+pfField' d@(dt, vs) ns (f, _, t) | t == dataDeclToType d = conT ''S `appT` conT (genName [dt, ns, f]) `appT` conT ''I
+pfField'   (dt, vs) ns (f, _, t)                         = conT ''S `appT` conT (genName [dt, ns, f]) `appT` (conT ''K `appT` return t)
 
 mkFrom :: Name -> Int -> Int -> Name -> Q [Q Clause]
 mkFrom ns m i n =
@@ -307,7 +307,7 @@ fromField (dt, vs) nr t | t == dataDeclToType (dt, vs) = conE 'I `appE` varE (fi
 fromField (dt, vs) nr t                                = conE 'K `appE` varE (field nr)
 
 fromField' :: (Name, [Name]) -> Int -> (Name, Strict, Type) -> Q Exp
-fromField' (dt, vs) nr (_, _, t) | t == dataDeclToType (dt, vs) = conE 'I `appE` varE (field nr)
+fromField' (dt, vs) nr (_, _, t) | t == dataDeclToType (dt, vs) = conE 'S `appE` (conE 'I `appE` varE (field nr))
 fromField' (dt, vs) nr (_, _, t)                                = conE 'S `appE` (conE 'K `appE` varE (field nr))
 
 toCon :: (Q Pat -> Q Pat) -> Name -> (Name, [Name]) -> Int -> Int -> Con -> Q Clause
@@ -340,7 +340,7 @@ toField (dt, vs) nr t | t == dataDeclToType (dt, vs) = conP 'I [varP (field nr)]
 toField (dt, vs) nr t                                = conP 'K [varP (field nr)]
 
 toField' :: (Name, [Name]) -> Int -> (Name, Strict, Type) -> Q Pat
-toField' (dt, vs) nr (_, _, t) | t == dataDeclToType (dt, vs) = conP 'I [varP (field nr)]
+toField' (dt, vs) nr (_, _, t) | t == dataDeclToType (dt, vs) = conP 'S [conP 'I [varP (field nr)]]
 toField' (dt, vs) nr (_, _, t)                                = conP 'S [conP 'K [varP (field nr)]]
 
 field :: Int -> Name

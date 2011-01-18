@@ -1,5 +1,5 @@
 name:                   regular
-version:                0.3.0
+version:                0.3.1
 synopsis:               Generic programming library for regular datatypes.
 description:
 
@@ -21,7 +21,7 @@ description:
   \[1] <http://hackage.haskell.org/package/multirec>
 
 category:               Generics
-copyright:              (c) 2010 Universiteit Utrecht
+copyright:              (c) 2011 Universiteit Utrecht
 license:                BSD3
 license-file:           LICENSE
 author:                 Jose Pedro Magalhaes
@@ -29,7 +29,7 @@ maintainer:             generics@haskell.org
 stability:              experimental
 build-type:             Custom
 cabal-version:          >= 1.2.1
-tested-with:            GHC == 6.10.4, GHC == 6.12.1, GHC == 7.0.0.20100925
+tested-with:            GHC == 6.10.4, GHC == 6.12.1, GHC == 7.0.1
 extra-source-files:     examples/Test.hs
                         ChangeLog
                         CREDITS
