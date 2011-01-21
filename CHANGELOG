@@ -1,3 +1,6 @@
+version 0.3.2:
+  - Add missing S case to eq.
+
 version 0.3.1:
   - Fix a bug in the Template Haskell code (thanks to lists@snowlion.nl)
 

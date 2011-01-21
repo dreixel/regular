@@ -49,5 +49,8 @@ instance (Eq f, Eq g) => Eq (f :*: g) where
 instance Eq f => Eq (C c f) where
   eqf f (C x) (C y) = eqf f x y
 
+instance Eq f => Eq (S s f) where
+  eqf f (S x) (S y) = eqf f x y
+
 eq :: (Regular a, Eq (PF a)) => a -> a -> Bool
 eq x y = eqf eq (from x) (from y)

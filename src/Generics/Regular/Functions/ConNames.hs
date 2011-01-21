@@ -38,6 +38,9 @@ instance (ConNames f, ConNames g) => ConNames (f :+: g) where
 instance (ConNames f, Constructor c) => ConNames (C c f) where
     hconNames (x :: (C c f) a) = [conName x]
 
+instance ConNames (S s f) where
+    hconNames _ = []
+
 instance (ConNames f, ConNames g) => ConNames (f :*: g) where
     hconNames _ = []
 
