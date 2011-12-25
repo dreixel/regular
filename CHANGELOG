@@ -1,3 +1,6 @@
+version 0.3.4:
+  - Change template-haskell dependency to allow building with ghc-7.4.1.
+
 version 0.3.3:
   - Change template-haskell dependency to allow building with ghc-7.2.1.
 
