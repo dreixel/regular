@@ -28,11 +28,15 @@ author:                 Jose Pedro Magalhaes
 maintainer:             generics@haskell.org
 stability:              experimental
 build-type:             Custom
-cabal-version:          >= 1.2.1
+cabal-version:          >= 1.6
 tested-with:            GHC == 6.10.4, GHC == 6.12.1, GHC == 7.0.1, GHC == 7.2.1
 extra-source-files:     examples/Test.hs
                         ChangeLog
                         CREDITS
+
+source-repository head
+  type: svn
+  location: https://subversion.cs.uu.nl/repos/project.dgp-haskell.libraries/regular/trunk/
 
 library
   hs-source-dirs:       src
