@@ -35,8 +35,8 @@ extra-source-files:     examples/Test.hs
                         CREDITS
 
 source-repository head
-  type: svn
-  location: https://subversion.cs.uu.nl/repos/project.dgp-haskell.libraries/regular/trunk/
+  type: git
+  location: git://github.com/dreixel/regular.git
 
 library
   hs-source-dirs:       src
