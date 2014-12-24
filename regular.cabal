@@ -1,5 +1,5 @@
 name:                   regular
-version:                0.3.4.3
+version:                0.3.4.4
 synopsis:               Generic programming library for regular datatypes.
 description:
 
@@ -8,7 +8,7 @@ description:
   etc. This library cannot be used with mutually recursive datatypes or
   with nested datatypes. The multirec library [1] can deal with mutually
   recursive datatypes.
-  . 
+  .
   This library has been described in the paper:
   .
   *  /A Lightweight Approach to Datatype-Generic Rewriting./
@@ -44,7 +44,7 @@ library
                         Generics.Regular.Constructor
                         Generics.Regular.Selector
                         Generics.Regular.TH
-                        
+
                         Generics.Regular.Functions
                         Generics.Regular.Functions.ConNames
                         Generics.Regular.Functions.Crush
@@ -55,10 +55,10 @@ library
                         Generics.Regular.Functions.Read
                         Generics.Regular.Functions.Show
                         Generics.Regular.Functions.Zip
-                        
+
   build-depends:        base >= 4.0 && < 5
   if impl(ghc >= 6.12)
-    build-depends:      template-haskell >=2.4 && <2.10
+    build-depends:      template-haskell >=2.4 && <3
     cpp-options:          -DTH_TYVARBNDR
   else
     build-depends:      template-haskell >= 2.2 && < 2.4
